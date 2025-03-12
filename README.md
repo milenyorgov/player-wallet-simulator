@@ -1,17 +1,14 @@
-﻿#Player Wallet Simulator
+# 🎮 Player Wallet Simulator
 
-A demo application that mimics the operations of a player wallet in online casino.   
+A demo application that simulates the operations of a player wallet in an online casino.   
+
 The application is built using **.NET 9** and includes:
 - **Console Application**  
 - **Unit Tests Project** (for testing core functionalities)  
 
----
-
 ## 🔧 Configuration
 
 The application supports **dynamic configuration** through `appsettings.json`.  
-Below are the available settings:
-
 ```json
 "SlotGameConfig": {
   "MinBet": "Defines the minimum bet amount",
@@ -26,7 +23,7 @@ Below are the available settings:
 
 You can modify these settings in **`src/PlayerWalletSimulator.Console/appsettings.json`** to customize game behavior.
 
-## Running the Application
+## 🚀 Running the Application
 
 ### 1️ Clone the Repository
 ```sh
@@ -56,7 +53,7 @@ The project includes a **Dockerfile** for containerized execution.
 
 ### Build the Docker Image
 ```sh
-cd src/PlayerWalletSimulator.Console/
+cd [project location]/src/PlayerWalletSimulator.Console/
 docker build -t player-wallet-simulator .
 ```
 
