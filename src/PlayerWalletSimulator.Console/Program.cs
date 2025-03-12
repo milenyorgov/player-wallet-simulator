@@ -4,6 +4,9 @@ using PlayerWalletSimulator.Console;
 using PlayerWalletSimulator.Console.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using PlayerWalletSimulator.Console.Configurations;
+using Serilog;
+using Serilog.Core;
+using Microsoft.Extensions.Logging;
 
 internal class Program
 {
@@ -17,7 +20,15 @@ internal class Program
             .AddEnvironmentVariables()
             .Build();
 
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(config)
+            .CreateLogger();
+
         var serviceProvider = new ServiceCollection()
+            .AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddSerilog();
+            })
             .AddSingleton<IPlayerWallet, PlayerWallet>()
             .AddSingleton<Random>()
             .AddSingleton<IGameService, SlotGame>()
@@ -26,11 +37,12 @@ internal class Program
             .BuildServiceProvider();
 
         var gameManager = serviceProvider.GetRequiredService<GameManager>();
+        var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
-        RunGameLoop(gameManager);
+        RunGameLoop(gameManager, logger);
     }
 
-    private static void RunGameLoop(GameManager gameManager)
+    private static void RunGameLoop(GameManager gameManager, ILogger<Program> logger)
     {
         Console.WriteLine($"Welcome to the gaming simulator. {AllowedCommandsMessage}");
 
@@ -62,11 +74,10 @@ internal class Program
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "An unexpected error occurred.");
                 Console.WriteLine("An unexpected error occurred. Please try again.");
             }
         }
-
-        Console.WriteLine("END");
     }
 
     private static void ProcessUserAction(GameManager gameManager, string action, decimal amount)
